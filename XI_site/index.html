@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Financial Data Exploration</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-info">
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<div class="page-header">
+					<h1 class="text-primary text-center">
+						<strong>Financial Data Exploration Suite</strong>
+					</h1>
+				</div>
+			</div>
+		</div>
+<div class="row">
+			<div class="span12">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="jumbotron bg-primary">
+							<form action="" method=post enctype=multipart/form-data>
+								<div class="form-group">
+									<lablel for="mode">What would you like to do?</lablel>
+									<select id="mode" class="form-control" id="mode">
+										<option value="reg">Regression</option>
+										<option value="den">Density</option>
+										<option value="plot">Plot</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<lablel for="voi">Variable of interest:</lablel>
+									<input id="voi" class="form-control" type="text" name="voi" placeholder="Sales">
+								</div>
+								<div class="form-group">
+									<lablel for="stores">Stores of interest:</lablel>
+									<input id="stores" class="form-control" type="text" name="stores" placeholder="all">
+								</div>
+								<div class="form-group">
+									<lablel for="store_col">Store column label:</lablel>
+									<input id="store_col" class="form-control" type="text" name="store_col" placeholder="Store">
+								</div>
+								<div class="form-group">
+									<lablel for="time_col">Time column label:</lablel>
+									<input id="time_col" class="form-control" type="text" name="time_col" placeholder="Date">
+								</div>
+								<div class="form-group">
+									<lablel for="title">Plot title:</lablel>
+									<input id="title"  class="form-control" type="text" name="title">
+								</div>
+								<div class="form-group">
+									<lablel for="yaxis">Y-axis label:</lablel>
+									<input id="yaxis" class="form-control" type="text" name="yaxis">
+								</div>
+								<div class="form-group">
+									<lablel for="interval">What are the time intervals?</lablel>
+									<select id="interval" class="form-control">
+										<option value="day">Day</option>
+										<option value="week">Week</option>
+										<option value="month">Month</option>
+										<option value="year">Year</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<lablel for="file">Please upload your files</lablel>
+									<input id="file" class="form-control" type="file">
+									<a class="btn btn-primary btn-large form-control" type=submit>
+										<span class="glyphicon glyphicon-open" aria-hidden="true"></span> UPLOAD</a>
+								</div>
+								<form class="form-inline" id="plot_download" method="get">
+								<div class="form-group">
+									<lablel>Download your Results:</lablel>
+									<button class="btn btn-info btn-large form-control" type="submit">
+										<span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div class="row">
+								<div class="panel panel-primary">
+									<div class="panel-heading">
+										<h3 class="panel-title">Image</h3>
+									</div>
+									<div class="panel-body">
+										<img class="img-responsive center-block" src="image/demo.png" />
+									</div>
+								</div>
+						</div>
+						<div class="row">
+								<div class="panel panel-primary">
+									<div class="panel-heading">
+										<h3 class="panel-title">Output</h3>
+									</div>
+									<div class="panel-body">
+										<samp>This text is meant to be treated as sample output from a computer program.</samp>
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+</body>
