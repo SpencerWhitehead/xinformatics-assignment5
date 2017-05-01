@@ -5,9 +5,9 @@
 <form action="" method=post enctype=multipart/form-data>
 	<p>What would you like to do?</p>
 	<p>
-        <select id="mode">
-            <option value="reg">Regression</option>
-            <option value="den">Density</option>
+        <select id="analytic" name="mode">
+            <option value="regression">Regression</option>
+            <option value="denisty">Density</option>
             <option value="plot">Plot</option>
         </select>
     </p>
@@ -15,11 +15,11 @@
  	Stores of interest: <input type="text" name="stores" value="all"><br>
  	Store column label: <input type="text" name="store_col" value="Store"><br>
  	Time column label: <input type="text" name="time_col" value="Date"><br>
- 	Plot title: <input type="text" name="title"><br>
- 	Y-axis label: <input type="text" name="yaxis"><br>
+ 	Plot title: <input type="text" name="title" value="My Plot"><br>
+ 	Y-axis label: <input type="text" name="yaxis" value="Y-Axis"><br>
     <p>What are the time intervals?</p>
     <p>
-        <select id="mode">
+        <select id="timing" name ="time_int">
             <option value="day">Day</option>
             <option value="week">Week</option>
             <option value="month">Month</option>
@@ -31,6 +31,12 @@
         <input type=submit value=Upload>
     </p>
 </form>
+{% if result_image %}
+<!-- <img src="{{ url_for(filename='annotated.txt.results.png') }}"> -->
+<img src="{{result_image}}">
+{% else %}
+  <h1>No Results</h1>
+{% endif %}
 <form id="plot_download" method="get">
 <p>
     Download your Results:
