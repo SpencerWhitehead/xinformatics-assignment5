@@ -1,0 +1,1 @@
+data folder is for storing uploaded files.
