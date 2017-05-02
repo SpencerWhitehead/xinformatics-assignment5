@@ -27,14 +27,16 @@
 				<div class="row">
 					<div class="col-md-4">
 						<div class="jumbotron bg-primary">
-							<form name="data_upload" id="data_upload" method="POST" enctype=multipart/form-data>
+							<form name="data_upload" id="data_upload" method="POST" enctype="multipart/form-data">
 								<div class="form-group">
+									<div class="input-group">
 									<lablel for="mode">What would you like to do?</lablel>
 									<select name="mode" class="form-control" id="mode">
 										<option value="reg">Regression</option>
 										<option value="den">Density</option>
 										<option value="plot">Plot</option>
 									</select>
+									</div>
 								</div>
 								<div class="form-group">
 									<lablel for="voi">Variable of interest:</lablel>
@@ -61,32 +63,36 @@
 									<input id="yaxis" class="form-control" type="text" name="yaxis">
 								</div>
 								<div class="form-group">
+									<div class="input-group">
 									<lablel for="interval">What are the time intervals?</lablel>
-									<select id="interval" class="form-control">
+									<select name='time_int' id="interval" class="form-control">
 										<option value="day">Day</option>
 										<option value="week">Week</option>
 										<option value="month">Month</option>
 										<option value="year">Year</option>
 									</select>
+									</div>
 								</div>
 								<div class="form-group">
 									<lablel for="file">Please upload your files</lablel>
-									<input id="file" class="form-control" type="file">
+									<input name="file" id="file" class="form-control" type="file">
 									<button class="btn btn-primary btn-large form-control" type="submit">
 										<span class="glyphicon glyphicon-open" aria-hidden="true"></span> Upload</button>
-									<!-- <a class="btn btn-primary btn-large form-control" type="submit">
-										<span class="glyphicon glyphicon-open" aria-hidden="true"></span> Upload</a> -->
 								</div>
 								</form>
-								<form name="plot_download" class="form-inline" id="plot_download" method="get">
+								<form class="form-inline" id="plot_download" method="get">
 								<div class="form-group">
+									{% if result_image %}
+									<input type="hidden" name="dl" value="{{ result_image }}" />
+									{% else %}
+									  <input type="hidden" name="dl" value="" />
+									{% endif %}
 									<lablel>Download your Results:</lablel>
 									<button class="btn btn-info btn-large form-control" type="submit">
 										<span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download
 									</button>
 								</div>
 								</form>
-							<!-- </form> -->
 						</div>
 					</div>
 					<div class="col-md-8">
@@ -117,7 +123,11 @@
 										<h3 class="panel-title">Result Image</h3>
 									</div>
 									<div class="panel-body">
-										<img class="img-responsive center-block" src="/static/image/demo.png" />
+									{% if result_image %}
+									<img class="img-responsive center-block" src="{{ result_image }}" />
+									{% else %}
+									  <img class="img-responsive center-block" src="/static/image/demo.png" />
+									{% endif %}
 									</div>
 								</div>
 						</div>
@@ -127,7 +137,13 @@
 									<h3 class="panel-title">Result Numerical Output</h3>
 								</div>
 								<div class="panel-body">
-									<samp>Minimum: 0.0<br>Maximum: 1130.0<br>Median: 559.0<br>Mean: 557.8<br>Q1: 464.0<br>Q3: 636.0</samp>
+									{% if result_text %}
+									{% for r in result_text %}
+									<p>{{ r }}</p>
+									{% endfor %}
+									{% else %}
+									<p>Output</p>
+									{% endif %}
 								</div>
 							</div>
 						</div>
@@ -146,7 +162,7 @@
 									<li>Density Plot:
 										<ul>
 											<li>Image: The denisty plot displays the distribution of your variable of interest. Higher values indicate more values of your variable of interest. The plot is colored by each of the stores you specified.</li>
-											<li>Numerical Output: This 6 number summary is a summary of the way your values for your variables of interest are distributed. The first number in the second row is a row number, while the second corresponds to the first label in the first row, the third corresponds to the second label, etc. These display the quartiles of your distribution (minimum value, 25% of your values, 50% of your values, the mean, 75% of your values, and the maximum value) when ordered by value.</li>
+											<li>Numerical Output: This 6 number summary is a summary of the way your values for your variables of interest are distributed. Q1 is the first quantile (25% of your values) and Q3 is the third quantile (75% of your values).</li>
 										</ul>
 									</li>
 									<li>Dot Plot:
@@ -167,3 +183,4 @@
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<script src="/static/js/bootstrap.min.js"></script>
 </body>
+</html>

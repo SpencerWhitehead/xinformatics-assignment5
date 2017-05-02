@@ -1,24 +1,24 @@
 import os
 import StringIO
 import zipfile
-# from flask import Flask, request, redirect, url_for
-from flask import Flask, redirect, request, Response, Blueprint, render_template, url_for, send_file
+from flask import Flask, redirect, request, Response, Blueprint, render_template
 
 from werkzeug import secure_filename
 
 import app
 
-# UPLOAD_FOLDER = '/tmp/'
 UPLOAD_FOLDER = 'data/'
 RESULT_FOLDER = 'app/static/results/'
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 FIELDS = ['mode', 'voi', 'stores', 'store_col',
             'time_col', 'title', 'yaxis', 'time_int']
+DENS_PLT_SUMMARY = ['minimum', 'maximum', 'median',
+            'mean', 'q1', 'q3']
 
-# app = Flask(__name__)
+DEMO = True
+
 f_uploader = Blueprint('file_upload', __name__)
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -37,6 +37,53 @@ def write_config(fname, entries, fields):
             f.write(d)
             f.write('\n')
 
+def read_num_summary(fname):
+    with open(fname, 'r') as f:
+        count = 0
+        keys = []
+        vals = []
+        for line in f:
+            line = line.strip()
+            temp = line.split()
+            temp = [x.strip('"') for x in temp]
+            if not count:
+                keys = temp
+            else:
+                vals = temp[1:]
+            count += 1
+    print keys
+    print vals
+    return dict(zip(keys, vals))
+
+def get_num_sum_str(fname):
+    results = read_num_summary(fname)
+    output = []
+    for num in DENS_PLT_SUMMARY:
+        output.append('%s: %s' % (num, results[num]))
+    return output
+
+def read_reg_summary(fname):
+    with open(fname, 'r') as f:
+        count = 0
+        all_lines = []
+        for line in f:
+            line = line.strip()
+            temp = line.split()
+            temp = [x.strip('"') for x in temp]
+            if not count:
+                all_lines.append(temp)
+            else:
+                all_lines.append(temp[1:])
+            count += 1
+        return all_lines
+
+def get_reg_str(fname):
+    results = read_reg_summary(fname)
+    output = []
+    for r in results:
+        output.append(' '.join(r))
+    return output
+
 @f_uploader.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -51,26 +98,42 @@ def index():
             flash('No selected file')
             return redirect(request.url)
 
+        config = ''
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
-            write_config(file.filename+'.config', request.form, FIELDS)
+            config = os.path.join(UPLOAD_FOLDER, filename)+'.config'
+            write_config(config, request.form, FIELDS)
         # Call R code
-        # subprocess.call (['/usr/bin/Rscript', '--vanilla', 'MyrScript.r', 'data/config'])
-        # return render_template('ALTindex.html',
-        #         result_image='/static/image/Density.png')
-        return render_template('ALTindex.html',
-                result_image='/static/results/%s' % (file.filename+'.results.png'))
+        if not DEMO:
+            subprocess.call (['/usr/bin/Rscript', '--vanilla', 'MyrScript.r', config])
+            output_name = RESULT_FOLDER+filename
+            result_text = get_reg_str(output_name+'.results.txt')
+            return render_template('index.html',
+                result_image=output_name+'.results.png',
+                result_text=result_text)
+        else:
+            if request.form['mode'] == 'reg':
+                result_text = get_reg_str(RESULT_FOLDER+'Regression.txt')
+                return render_template('index.html',
+                    result_image='/static/image/Regression.png',
+                    result_text=result_text)
+            else:
+                result_text = get_num_sum_str(RESULT_FOLDER+'5numbersummary.txt')
+                if request.form['mode'] == 'den':
+                    return render_template('index.html',
+                            result_image='/static/image/Density.png',
+                            result_text=result_text)
+                else:
+                    return render_template('index.html',
+                            result_image='/static/image/Dot.png',
+                            result_text=result_text)
 
     elif request.method == 'GET':
-        print 'GETTING HERE'
-        print request.args
         if 'dl' in request.args:
             return result_download(request.args['dl'])
         else:
-            return render_template('ALTindex.html')
-        # return render_template('sales_analysis.html')
-
+            return render_template('index.html')
 
 def result_download(fname):
     if not fname:
