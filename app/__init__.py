@@ -7,6 +7,7 @@ app = Flask(__name__)
 # constants are used for APP configuration                                                                                                                                           
 ALLOWED_EXTENSIONS = set(['csv', 'txt'])
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
+app.secret_key = 'some_secret'
 
 from file_upload import f_uploader
 app.register_blueprint(f_uploader)

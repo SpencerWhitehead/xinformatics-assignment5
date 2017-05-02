@@ -1,7 +1,7 @@
 import os
 import StringIO
 import zipfile
-from flask import Flask, redirect, request, Response, Blueprint, render_template
+from flask import Flask, flash, redirect, request, Response, Blueprint, render_template
 
 from werkzeug import secure_filename
 
