@@ -51,8 +51,6 @@ def read_num_summary(fname):
             else:
                 vals = temp[1:]
             count += 1
-    print keys
-    print vals
     return dict(zip(keys, vals))
 
 def get_num_sum_str(fname):
@@ -147,7 +145,6 @@ def result_download(fname):
     zf = zipfile.ZipFile(s, 'w')
     temp = fname.rsplit('.', 1)[0].rsplit('/', 1)[1]
 
-    print temp
     for fn in os.listdir(RESULT_FOLDER):
         if temp in fn:
             zf.write(os.path.join(RESULT_FOLDER, fn), fn)
